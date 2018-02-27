@@ -2,8 +2,6 @@
 #include <stdio.h>
 #include <assert.h>
 
-//typedef uintmax_t max_int_t;
-
 int getwordlen(char * s){
 	// while the number of bits % 3 != 0
 	// tack more zeros onto the front
@@ -16,22 +14,17 @@ int getwordlen(char * s){
 
 long long change_format(char* s){
 	int wordlen = getwordlen(s);
-	fprintf(stdout, "wordlen of %s is %d\n", s, wordlen);
 	if (wordlen > 8){
-		fprintf(stderr, "Error: %s has length greater than 8, please supply word where length <=8\n", s);
+		fprintf(stderr, "Error: %s has length greater than 8, please supply word where length less than or equal to 8\n", s);
 		exit(1);
 	}
 
 	long long new_s = 0;
-	new_s |= s[0];
-	fprintf(stdout, "or equaled one char, word is %llu\n", new_s);
-	long long shift_by = 8;
-	for (int i = 1; i < wordlen; i++){
-		fprintf(stdout, "executing for loop, char is %c\n", s[i]);
+	long long shift_by = 0;
+	for (int i = 0; i < wordlen; i++){
 		new_s |= ((long long) s[i]) << shift_by;
 		shift_by += 8; //16, 24, 32, etc.
 	}
-	fprintf(stdout, "done shifting, word is %llu\n", new_s);
 	return new_s;
 }
 
@@ -52,6 +45,19 @@ unsigned char * getencodingscheme(){
 	
 	return scheme;
 };
+
+
+void translate(char final_word[23], unsigned char* scheme, long long word, int wordlength){
+	long long three_bit_mask = 0xd000000000000000; // three bits in the 61st-63rd bit
+	//char final_word[23] = {'\0'}; // a word of length 8 will have 64 bits, which will get encoded to ceil(64/3) = 22 letters
+	for (int i = 0; i < wordlength; i++){
+		int letter = (int) (word & three_bit_mask) >> ((64-3)-i*3);
+		final_word[i] = scheme[letter];
+		three_bit_mask = three_bit_mask >> 3;
+	}
+	
+
+}
 
 /*
 unsigned char* fresh_encode(unsigned char * this_word){
