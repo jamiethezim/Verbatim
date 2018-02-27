@@ -27,13 +27,13 @@ jamie->
 1101010, 1100001, 1101101, 1101001, 1100101
 
 
-___ is 6, translate to i
+110 (bits 37-39) is 6, translate to i
 
 
-   ___ is 5, translate to t
+101 (bits 36-38) is 5, translate to t
 
 
-      _  __ is 3, translate to b
+011 (bits 33-35) is 3, translate to b
 
 
 and so on. we can transform the word "jamie" into "brtaeiimrbat".
